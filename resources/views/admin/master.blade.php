@@ -36,7 +36,9 @@
             <div class="collapse navbar-collapse" id="app-navbar-collapse">
                 <!-- Left Side Of Navbar -->
                 <ul class="nav navbar-nav">
-                    &nbsp;
+                    &nbsp;<li><a href="{{ route('admin.user.index')  }}">Người dùng</a></li>
+                    <li><a href="{{ route('admin.category.index')  }}">Chuyên mục</a></li>
+                    <li><a href="{{ route('admin.product.index')  }}">Sản phẩm</a></li>
                 </ul>
 
                 <!-- Right Side Of Navbar -->

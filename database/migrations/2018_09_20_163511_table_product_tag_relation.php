@@ -13,7 +13,7 @@ class TableProductTagRelation extends Migration
      */
     public function up()
     {
-        Schema::table('product_tags', function (Blueprint $table) {
+        Schema::table('product_tag', function (Blueprint $table) {
             $table->foreign('product_id')
                 ->references('id')
                 ->on('products')
