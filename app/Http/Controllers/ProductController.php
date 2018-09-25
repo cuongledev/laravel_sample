@@ -48,7 +48,8 @@ class ProductController extends Controller
             'sale_price' => 'required|numeric|min:0',
             'original_price' => 'required|numeric|min:0',
             'quantity' => 'required|numeric|min:0',
-            'category_id' => 'required|exists:categories,id'
+            'category_id' => 'required|exists:categories,id',
+            'image' => 'image|size:2048'
         ],[
             'name.required' => 'Vui lòng nhập tên sản phẩm.',
             'code.required' => 'Vui lòng nhập mã sản phẩm.',
@@ -56,6 +57,8 @@ class ProductController extends Controller
             'category_id.required' => 'Vui lòng chọn danh mục.',
             'category_id.exists' => 'Không tồn tại danh mục.',
             'user_id.exists' => 'Không tồn tại danh mục.',
+            'image.image' => 'Không đúng chuẩn định dạng image.',
+            'image.size' => 'Dung lượng vượt quá giới hạn cho phép.',
             // required
             'regular_price.required' => 'Vui lòng nhập giá thị trường sản phẩm.',
             'sale_price.required' => 'Vui lòng nhập giá bán sản phẩm.',
@@ -76,17 +79,30 @@ class ProductController extends Controller
         if ($valid->fails()){
             return redirect()->back()->withErrors($valid)->withInput();
         }else{
-            $order = 0;
-            if($request->input('order')){
-                $order = $request->input('order');
+            if($request->hasFile('image')){
+                $image = $request->file('image');
+                if (file_exists(public_path('uploads'))){
+                    $folderName = date('Y-m');
+                    if(!file_exists(public_path('uploads/'.$folderName))){
+                        mkdir(public_path('uploads/'.$folderName),0755);
+                    }
+                }
+
             }
-            $Product = Product::create([
+
+            $product = Product::create([
                 'name' => $request->input('name'),
-                'slug' => str_slug($request->input('name')),
-                'parent' => $request->input('parent'),
-                'parent' => $order
+                'code' => mb_strtoupper($request->input('code'),'UTF-8'),
+                'content' => $request->input('content'),
+                'regular_price' => $request->input('regular_price'),
+                'sale_price' => $request->input('sale_price'),
+                'original_price' => $request->input('original_price'),
+                'quantity' => $request->input('quantity'),
+                'image' => '',
+                'category_id' => $request->input('category_id'),
+                'user_id' => auth()->id()
             ]);
-            return redirect()->route('admin.Product.index')->with('messager',"Thêm chuyên mục $Product->name thành công.");
+            return redirect()->route('admin.product.index')->with('messager',"Thêm sản phẩm $product->name thành công.");
         }
 
     }
