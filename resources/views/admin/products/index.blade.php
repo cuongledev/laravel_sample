@@ -42,7 +42,13 @@
                                     <td>{{ $product->code }}</td>
                                     <td>{{ $product->sale_price }}</td>
                                     <td>{{ $product->quantity }}</td>
-                                    <td>{{ $product->image }}</td>
+                                    <td>
+                                        @if(file_exists(public_path('uploads/'.$product->image)))
+
+                                            <img src="{{ asset("uploads/$product->image") }}" class="img-thumbnail">
+
+                                            @endif
+                                    </td>
                                     <td>{{ $product->user->name }}</td>
                                     <td>{{ $product->created_at }}</td>
                                     <td>{{ $product->updated_at }}</td>

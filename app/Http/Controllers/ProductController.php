@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Intervention\Image\Facades\Image;
 
 class ProductController extends Controller
 {
@@ -49,7 +50,7 @@ class ProductController extends Controller
             'original_price' => 'required|numeric|min:0',
             'quantity' => 'required|numeric|min:0',
             'category_id' => 'required|exists:categories,id',
-            'image' => 'image|size:2048'
+            'image' => 'image|max:2048'
         ],[
             'name.required' => 'Vui lòng nhập tên sản phẩm.',
             'code.required' => 'Vui lòng nhập mã sản phẩm.',
@@ -58,7 +59,7 @@ class ProductController extends Controller
             'category_id.exists' => 'Không tồn tại danh mục.',
             'user_id.exists' => 'Không tồn tại danh mục.',
             'image.image' => 'Không đúng chuẩn định dạng image.',
-            'image.size' => 'Dung lượng vượt quá giới hạn cho phép.',
+            'image.size' => 'Dung lượng vượt quá giới hạn cho phép :max KB.',
             // required
             'regular_price.required' => 'Vui lòng nhập giá thị trường sản phẩm.',
             'sale_price.required' => 'Vui lòng nhập giá bán sản phẩm.',
@@ -79,14 +80,26 @@ class ProductController extends Controller
         if ($valid->fails()){
             return redirect()->back()->withErrors($valid)->withInput();
         }else{
+            $imageName = '';
             if($request->hasFile('image')){
                 $image = $request->file('image');
                 if (file_exists(public_path('uploads'))){
                     $folderName = date('Y-m');
+                    $fileNameWithTimestamp = md5($image->getClientOriginalName().time());
+                    $fileName =  $fileNameWithTimestamp."." . $image->getClientOriginalExtension();
+                    $thumbnailFileName = $fileNameWithTimestamp  ."_thumb." . $image->getClientOriginalExtension();
                     if(!file_exists(public_path('uploads/'.$folderName))){
                         mkdir(public_path('uploads/'.$folderName),0755);
                     }
                 }
+
+                // Di chuyen file vao uploads
+                $imageName = $folderName ."/". $fileName;
+                $image->move(public_path('uploads/'.$folderName),$fileName);
+
+                /*Image::make(public_path('uploads/'.$folderName."/".$fileName))
+                    ->resize(200,150)
+                ->save(public_path('uploads/'.$folderName."/".$thumbnailFileName));*/
 
             }
 
@@ -98,7 +111,7 @@ class ProductController extends Controller
                 'sale_price' => $request->input('sale_price'),
                 'original_price' => $request->input('original_price'),
                 'quantity' => $request->input('quantity'),
-                'image' => '',
+                'image' => $imageName,
                 'category_id' => $request->input('category_id'),
                 'user_id' => auth()->id()
             ]);

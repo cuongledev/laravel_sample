@@ -63,10 +63,80 @@
                             </select>
                             <div class="invalid-feedback">{{ $errors->first('category_id') }}</div>
                         </div>
+
+                        <div class="form-group" id="cn-app">
+
+                           <cn-attributes></cn-attributes>
+
+                        </div>
+
+
+
                         <button type="submit" class="btn btn-success">Submit</button>
                     </form>
                 </div>
             </div>
         </div>
     </div>
+@endsection
+
+@section('body_scripts_bottom')
+    <script type="text/javascript" src="{{ asset('js/vue.js') }}"></script>
+    <script type="text/x-template" id="cn-attributes-template">
+
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Thuộc tính</th>
+                <th>Giá trị</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr v-for="(item,key) in attributes">
+                <td><input type="text" v-model="item.name" v-bind:name="'attributes['+key+'][name]'" placeholder="Thuộc tính" class="form-control"/></td>
+                <td><input type="text" v-model="item.value" v-bind:name="'attributes['+key+'][value]'" placeholder="Giá trị" class="form-control"/></td>
+                <td><button type="button" v-if="key != 0" v-on:click="delAttributes(item)" class="btn btn-danger"><i class="glyphicon glyphicon-remove"></i></button>
+                    <button type="button" v-if="key == attributes.length - 1" v-on:click="addAttributes" class="btn btn-success"><i class="glyphicon glyphicon-plus"></i></button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+    </script>
+    <script type="text/javascript">
+        @php
+            $attributes = old('attributes') ? json_encode(old('attributes')) : null;
+        @endphp
+        Vue.component('cn-attributes',{
+            template: '#cn-attributes-template',
+            data: function(){
+                var attributes = [
+                    { name: '',value: ''}
+                ];
+                @if($attributes)
+                    attributes =  {!! $attributes !!};
+                @endif
+                return {
+                    attributes: attributes
+                }
+            },
+            methods: {
+                addAttributes: function(){
+                    console.log(this.attributes);
+                    this.attributes.push({ name: '',value: '' })
+                },
+                delAttributes: function(item){
+                    this.attributes.splice(this.attributes.indexOf(item) ,1);
+                }
+
+            }
+
+
+        });
+
+        new Vue({
+            el: '#cn-app'
+        });
+
+    </script>
 @endsection
