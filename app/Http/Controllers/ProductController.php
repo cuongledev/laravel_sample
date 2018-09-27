@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Product;
+use App\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Intervention\Image\Facades\Image;
+
 
 class ProductController extends Controller
 {
@@ -103,18 +105,59 @@ class ProductController extends Controller
 
             }
 
+
+
+            $attributes = '';
+            if($request->has('attributes') && is_array($request->input('attributes')) && count($request->input('attributes')) > 0){
+                $attributes = $request->input('attributes');
+                foreach ($attributes as $key => $item) {
+                    if(!isset($item['name'])){
+                        unset($attributes[$key]);
+                        continue;
+                    }
+                    if(!isset($item['value'])){
+                        unset($attributes[$key]);
+                        continue;
+                    }
+                }
+                $attributes = json_encode($attributes);
+            }
+
             $product = Product::create([
                 'name' => $request->input('name'),
-                'code' => mb_strtoupper($request->input('code'),'UTF-8'),
+                'code' => mb_strtoupper($request->input('code'), 'UTF-8'),
                 'content' => $request->input('content'),
                 'regular_price' => $request->input('regular_price'),
                 'sale_price' => $request->input('sale_price'),
                 'original_price' => $request->input('original_price'),
                 'quantity' => $request->input('quantity'),
                 'image' => $imageName,
+                'attributes' => $attributes,
                 'category_id' => $request->input('category_id'),
                 'user_id' => auth()->id()
             ]);
+
+            // them tags
+
+            if($request->has('tags') && is_array($request->input('tags')) && count($request->input('tags'))>0){
+                $tags = $request->input('tags');
+                $tagsId = [];
+                foreach ($tags as $tag) {
+                    $tag = Tag::firstOrCreate([
+                        'name' => str_slug($tag)
+                    ],[
+                        'name' => str_slug($tag),
+                        'slug' => str_slug($tag)
+                    ]);
+
+                    $tagsId[] = $tag->id;
+                }
+
+                $product->tags()->sync($tagsId);
+            }
+
+
+
             return redirect()->route('admin.product.index')->with('messager',"Thêm sản phẩm $product->name thành công.");
         }
 
@@ -129,15 +172,12 @@ class ProductController extends Controller
     }
     public function show($id)
     {
-        $data['Product'] = Product::find($id);
-        $data['products'] = Product::where([
-            ['parent' ,'=', 0],
-            ['id' ,'<>', 1]
-        ])->get();
-        if ($data['Product']!==null){
+        $data['product'] = Product::find($id);
+        $data['categories'] = Product::orderBy('name','asc')->get();
+        if ($data['product']!==null){
             return view('admin.products.show',$data);
         }
-        return redirect()->route('admin.Product.index')->with('error',"Không tìm thấy chuyên mục này.");
+        return redirect()->route('admin.product.index')->with('error',"Không tìm thấy sản phẩm này.");
 
     }
     public function update(Request $request,$id){

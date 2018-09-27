@@ -64,6 +64,17 @@
                             <div class="invalid-feedback">{{ $errors->first('category_id') }}</div>
                         </div>
 
+                        <div class="form-group">
+                            <label for="tags" style="display: block;"> Thẻ tags </label>
+                            <select name="tags[]" id="tags" class="form-control" multiple style="width: 75%">
+                                @if(old('tags'))
+                                    @foreach(old('tags') as $tag)
+                                        <option value="{{ $tag }}" selected>{{ $tag }}</option>
+                                    @endforeach
+                                @endif
+                            </select>
+                        </div>
+
                         <div class="form-group" id="cn-app">
 
                            <cn-attributes></cn-attributes>
@@ -80,8 +91,19 @@
     </div>
 @endsection
 
+@section('head_styles')
+    <link rel="stylesheet" href="{{ asset('css/select2.min.css')  }}">
+@endsection
+
 @section('body_scripts_bottom')
     <script type="text/javascript" src="{{ asset('js/vue.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/select2.min.js') }}"></script>
+    <script type="text/javascript">
+        $("#tags").select2({
+            tags: true,
+            tokenSeparators: [',',' ']
+        });
+    </script>
     <script type="text/x-template" id="cn-attributes-template">
 
         <table class="table table-striped">
