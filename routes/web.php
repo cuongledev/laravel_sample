@@ -17,10 +17,7 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', function(){
-    return view('welcome');
-})->name('home');
-Route::group(['prefix'=> 'admin','as' => 'admin.'],function(){
+Route::group(['prefix'=> 'admin','as' => 'admin.','namespace' => 'Backend'],function(){
     Route::get('/users', 'UserController@index')->name('user.index');
     Route::get('/users/create', 'UserController@create')->name('user.create');
     Route::post('/users', 'UserController@store')->name('user.store');
@@ -45,5 +42,11 @@ Route::group(['prefix'=> 'admin','as' => 'admin.'],function(){
     Route::get('/products/{id}', 'ProductController@show')->where('id', '[0-9]+')->name('product.show');
     Route::put('/products/{id}/update', 'ProductController@update')->name('product.update');
     Route::delete('/products/{id}/delete', 'ProductController@delete')->name('product.delete');
+
+});
+
+Route::group(['as' => 'frontend.','namespace' => 'Frontend'],function(){
+    Route::get('/', 'HomeController@index')->name('home.index');
+    Route::get('/products/{slug}-{id}.html', 'HomeController@show')->name('home.show');
 
 });

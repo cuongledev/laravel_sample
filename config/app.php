@@ -180,6 +180,10 @@ return [
         Barryvdh\Debugbar\ServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
 
+        //thu vien
+
+        App\CUONGLELIB\Providers\ToolServiceProvider::class,
+
     ],
 
     /*
@@ -230,6 +234,8 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'Debugbar' => Barryvdh\Debugbar\Facade::class,
         'Image' => Intervention\Image\Facades\Image::class,
+        //thu vien
+        'Tool' => App\CUONGLELIB\Facades\Tool::class,
     ],
 
 ];
