@@ -25,13 +25,13 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $data['products'] = Product::orderBy('id','DESC')->limit(4)->get();
+        $data['products'] = Product::orderBy('id','DESC')->limit(12)->get();
         return view('frontend.default.index',$data);
     }
 
-    public function show($id){
-        $data['products'] = Product::find('id',$id)->first();
-        return view('frontend.default.show',$data);
+    public function show($slug, $id){
+        $data['product'] = Product::find($id);
+        return view('frontend.default.single-product',$data);
 
     }
 }

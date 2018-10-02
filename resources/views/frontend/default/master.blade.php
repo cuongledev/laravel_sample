@@ -10,7 +10,7 @@
     <meta name="keywords" content="MediaCenter, Template, eCommerce">
     <meta name="robots" content="all">
 
-    <title>MediaCenter - Responsive eCommerce Template</title>
+    <title>Laravel</title>
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="{{ asset('themes/default/assets/css/bootstrap.min.css') }}">
@@ -38,7 +38,12 @@
     <script src="{{ asset('themes/default/assets/js/html5shiv.js') }}"></script>
     <script src="{{ asset('themes/default/assets/js/respond.min.js') }}"></script>
     <![endif]-->
-
+    <script>
+        window.BASE_CONFIG = {
+            csrf: '{{ csrf_token() }}',
+            baseUrl: '{{ url('/') }}',
+        }
+    </script>
 
 </head>
 <body>
@@ -78,7 +83,7 @@
                             <li><a href="index-2.html">Home Alt</a></li>
                             <li><a href="category-grid.html">Category - Grid/List</a></li>
                             <li><a href="category-grid-2.html">Category 2 - Grid/List</a></li>
-                            <li><a href="single-product.html">Single Product</a></li>
+                            <li><a href="single-product.blade.php">Single Product</a></li>
                             <li><a href="single-product-sidebar.html">Single Product with Sidebar</a></li>
                             <li><a href="cart.html">Shopping Cart</a></li>
                             <li><a href="checkout.html">Checkout</a></li>
@@ -726,7 +731,7 @@
                                 <li>
                                     <div class="row">
                                         <div class="col-xs-12 col-sm-9 no-margin">
-                                            <a href="single-product.html">Netbook Acer Travel B113-E-10072</a>
+                                            <a href="single-product.blade.php">Netbook Acer Travel B113-E-10072</a>
                                             <div class="price">
                                                 <div class="price-prev">$2000</div>
                                                 <div class="price-current">$1873</div>
@@ -745,7 +750,7 @@
                                 <li>
                                     <div class="row">
                                         <div class="col-xs-12 col-sm-9 no-margin">
-                                            <a href="single-product.html">PowerShot Elph 115 16MP Digital Camera</a>
+                                            <a href="single-product.blade.php">PowerShot Elph 115 16MP Digital Camera</a>
                                             <div class="price">
                                                 <div class="price-prev">$2000</div>
                                                 <div class="price-current">$1873</div>
@@ -763,7 +768,7 @@
                                 <li>
                                     <div class="row">
                                         <div class="col-xs-12 col-sm-9 no-margin">
-                                            <a href="single-product.html">PowerShot Elph 115 16MP Digital Camera</a>
+                                            <a href="single-product.blade.php">PowerShot Elph 115 16MP Digital Camera</a>
                                             <div class="price">
                                                 <div class="price-prev">$2000</div>
                                                 <div class="price-current">$1873</div>
@@ -793,7 +798,7 @@
                                 <li>
                                     <div class="row">
                                         <div class="col-xs-12 col-sm-9 no-margin">
-                                            <a href="single-product.html">HP Scanner 2910P</a>
+                                            <a href="single-product.blade.php">HP Scanner 2910P</a>
                                             <div class="price">
                                                 <div class="price-prev">$2000</div>
                                                 <div class="price-current">$1873</div>
@@ -812,7 +817,7 @@
                                 <li>
                                     <div class="row">
                                         <div class="col-xs-12 col-sm-9 no-margin">
-                                            <a href="single-product.html">Galaxy Tab 3 GT-P5210 16GB, Wi-Fi, 10.1in -
+                                            <a href="single-product.blade.php">Galaxy Tab 3 GT-P5210 16GB, Wi-Fi, 10.1in -
                                                 White</a>
                                             <div class="price">
                                                 <div class="price-prev">$2000</div>
@@ -832,7 +837,7 @@
                                 <li>
                                     <div class="row">
                                         <div class="col-xs-12 col-sm-9 no-margin">
-                                            <a href="single-product.html">PowerShot Elph 115 16MP Digital Camera</a>
+                                            <a href="single-product.blade.php">PowerShot Elph 115 16MP Digital Camera</a>
                                             <div class="price">
                                                 <div class="price-prev">$2000</div>
                                                 <div class="price-current">$1873</div>
@@ -862,7 +867,7 @@
                                 <li>
                                     <div class="row">
                                         <div class="col-xs-12 col-sm-9 no-margin">
-                                            <a href="single-product.html">Galaxy Tab GT-P5210, 10" 16GB Wi-Fi</a>
+                                            <a href="single-product.blade.php">Galaxy Tab GT-P5210, 10" 16GB Wi-Fi</a>
                                             <div class="price">
                                                 <div class="price-prev">$2000</div>
                                                 <div class="price-current">$1873</div>
@@ -881,7 +886,7 @@
                                 <li>
                                     <div class="row">
                                         <div class="col-xs-12 col-sm-9 no-margin">
-                                            <a href="single-product.html">PowerShot Elph 115 16MP Digital Camera</a>
+                                            <a href="single-product.blade.php">PowerShot Elph 115 16MP Digital Camera</a>
                                             <div class="price">
                                                 <div class="price-prev">$2000</div>
                                                 <div class="price-current">$1873</div>
@@ -900,7 +905,7 @@
                                 <li>
                                     <div class="row">
                                         <div class="col-xs-12 col-sm-9 no-margin">
-                                            <a href="single-product.html">Surface RT 64GB, Wi-Fi, 10.6in - Dark
+                                            <a href="single-product.blade.php">Surface RT 64GB, Wi-Fi, 10.6in - Dark
                                                 Titanium</a>
                                             <div class="price">
                                                 <div class="price-prev">$2000</div>

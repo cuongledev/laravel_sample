@@ -20,7 +20,7 @@
                                                     <li><a href="index-2.html">Home Alt</a></li>
                                                     <li><a href="category-grid.html">Category - Grid/List</a></li>
                                                     <li><a href="category-grid-2.html">Category 2 - Grid/List</a></li>
-                                                    <li><a href="single-product.html">Single Product</a></li>
+                                                    <li><a href="single-product.blade.php">Single Product</a></li>
                                                     <li><a href="single-product-sidebar.html">Single Product with
                                                             Sidebar</a></li>
                                                 </ul>
@@ -442,7 +442,7 @@
                                         terms and conditions apply
                                     </div>
                                     <div class="button-holder fadeInDown-3">
-                                        <a href="single-product.html" class="big le-button ">shop now</a>
+                                        <a href="single-product.blade.php" class="big le-button ">shop now</a>
                                     </div>
                                 </div><!-- /.caption -->
                             </div><!-- /.container-fluid -->
@@ -463,7 +463,7 @@
                                         terms and conditions apply
                                     </div>
                                     <div class="button-holder fadeInDown-3">
-                                        <a href="single-product.html" class="big le-button ">shop now</a>
+                                        <a href="single-product.blade.php" class="big le-button ">shop now</a>
                                     </div>
                                 </div><!-- /.caption -->
                             </div><!-- /.container-fluid -->
@@ -517,6 +517,59 @@
 
                 <!-- Tab panes -->
                 <div class="tab-content">
+                    <div class="tab-pane active" id="latest-products">
+                        <div class="product-grid-holder">
+                            @forelse($products as $product)
+                                <div class="col-sm-4 col-md-3  no-margin product-item-holder hover">
+                                    <div class="product-item">
+                                        {{--<div class="ribbon red"><span>sale</span></div>--}}
+                                        {{--<div class="ribbon green"><span>bestseller</span></div>--}}
+                                        {{--<div class="ribbon blue"><span>new</span></div>--}}
+
+                                        <div class="image">
+                                            @if (!empty($product->image) && file_exists(public_path(getThumbnail("uploads/$product->image"))))
+                                                <img src="{{ asset('themes/default/assets/images/blank.gif') }}"
+                                                     data-echo="{{ asset(getThumbnail("uploads/$product->image")) }}"
+                                                     alt="Image">
+                                            @else
+                                                <img src="{{ asset('themes/default/assets/images/blank.gif') }}"
+                                                     data-echo="{{ asset('images/no_image-200x150.jpg') }}"
+                                                     alt="No Image">
+                                            @endif
+                                        </div>
+                                        <div class="body">
+                                            {{--<div class="label-discount green">-50% sale</div>--}}
+                                            <div class="title">
+                                                <a href="{{ route('frontend.home.show', ['slug' => str_slug($product->name), 'id' => $product->id]) }}">{{ $product->name }}</a>
+                                            </div>
+                                            <div class="brand">{{ $product->code }}</div>
+                                        </div>
+                                        <div class="prices">
+                                            <div class="price-prev">{{ number_format($product->regular_price, 0, ',', '.') }} VNĐ</div>
+                                            <div class="price-current pull-right">{{ number_format($product->sale_price, 0, ',', '.') }} VNĐ</div>
+                                        </div>
+
+                                        <div class="hover-area">
+                                            <div class="add-cart-button">
+                                                <a href="single-product.blade.php" class="le-button">Thêm giỏ hàng</a>
+                                            </div>
+                                            {{--<div class="wish-compare">--}}
+                                            {{--<a class="btn-add-to-wishlist" href="#">add to wishlist</a>--}}
+                                            {{--<a class="btn-add-to-compare" href="#">compare</a>--}}
+                                            {{--</div>--}}
+                                        </div>
+                                    </div>
+                                </div>
+                            @empty
+                            @endforelse
+                        </div>
+                        <div class="loadmore-holder text-center">
+                            <a class="btn-loadmore" href="#">
+                                <i class="fa fa-plus"></i>
+                                load more products</a>
+                        </div>
+
+                    </div>
                     <div class="tab-pane active" id="featured">
                         <div class="product-grid-holder">
                             @forelse($products as $product)
@@ -551,7 +604,7 @@
 
                                         <div class="hover-area">
                                             <div class="add-cart-button">
-                                                <a href="single-product.html" class="le-button">Thêm giỏ hàng</a>
+                                                <a href="single-product.blade.php" class="le-button">Thêm giỏ hàng</a>
                                             </div>
                                             {{--<div class="wish-compare">--}}
                                             {{--<a class="btn-add-to-wishlist" href="#">add to wishlist</a>--}}
@@ -583,7 +636,7 @@
                                     <div class="body">
                                         <div class="label-discount clear"></div>
                                         <div class="title">
-                                            <a href="single-product.html">White lumia 9001</a>
+                                            <a href="single-product.blade.php">White lumia 9001</a>
                                         </div>
                                         <div class="brand">nokia</div>
                                     </div>
@@ -593,7 +646,7 @@
                                     </div>
                                     <div class="hover-area">
                                         <div class="add-cart-button">
-                                            <a href="single-product.html" class="le-button">add to cart</a>
+                                            <a href="single-product.blade.php" class="le-button">add to cart</a>
                                         </div>
                                         <div class="wish-compare">
                                             <a class="btn-add-to-wishlist" href="#">add to wishlist</a>
@@ -613,7 +666,7 @@
                                     <div class="body">
                                         <div class="label-discount green">-50% sale</div>
                                         <div class="title">
-                                            <a href="single-product.html">VAIO Fit Laptop - Windows 8 SVF14322CXW</a>
+                                            <a href="single-product.blade.php">VAIO Fit Laptop - Windows 8 SVF14322CXW</a>
                                         </div>
                                         <div class="brand">sony</div>
                                     </div>
@@ -624,7 +677,7 @@
 
                                     <div class="hover-area">
                                         <div class="add-cart-button">
-                                            <a href="single-product.html" class="le-button">add to cart</a>
+                                            <a href="single-product.blade.php" class="le-button">add to cart</a>
                                         </div>
                                         <div class="wish-compare">
                                             <a class="btn-add-to-wishlist" href="#">add to wishlist</a>
@@ -645,7 +698,7 @@
                                     <div class="body">
                                         <div class="label-discount clear"></div>
                                         <div class="title">
-                                            <a href="single-product.html">Netbook Acer TravelMate
+                                            <a href="single-product.blade.php">Netbook Acer TravelMate
                                                 B113-E-10072</a>
                                         </div>
                                         <div class="brand">acer</div>
@@ -656,7 +709,7 @@
                                     </div>
                                     <div class="hover-area">
                                         <div class="add-cart-button">
-                                            <a href="single-product.html" class="le-button">add to cart</a>
+                                            <a href="single-product.blade.php" class="le-button">add to cart</a>
                                         </div>
                                         <div class="wish-compare">
                                             <a class="btn-add-to-wishlist" href="#">add to wishlist</a>
@@ -676,7 +729,7 @@
                                     <div class="body">
                                         <div class="label-discount clear"></div>
                                         <div class="title">
-                                            <a href="single-product.html">POV Action Cam</a>
+                                            <a href="single-product.blade.php">POV Action Cam</a>
                                         </div>
                                         <div class="brand">sony</div>
                                     </div>
@@ -686,7 +739,7 @@
                                     </div>
                                     <div class="hover-area">
                                         <div class="add-cart-button">
-                                            <a href="single-product.html" class="le-button">add to cart</a>
+                                            <a href="single-product.blade.php" class="le-button">add to cart</a>
                                         </div>
                                         <div class="wish-compare">
                                             <a class="btn-add-to-wishlist" href="#">add to wishlist</a>
@@ -719,7 +772,7 @@
                                     <div class="body">
                                         <div class="label-discount clear"></div>
                                         <div class="title">
-                                            <a href="single-product.html">Netbook Acer TravelMate
+                                            <a href="single-product.blade.php">Netbook Acer TravelMate
                                                 B113-E-10072</a>
                                         </div>
                                         <div class="brand">acer</div>
@@ -730,7 +783,7 @@
                                     </div>
                                     <div class="hover-area">
                                         <div class="add-cart-button">
-                                            <a href="single-product.html" class="le-button">add to cart</a>
+                                            <a href="single-product.blade.php" class="le-button">add to cart</a>
                                         </div>
                                         <div class="wish-compare">
                                             <a class="btn-add-to-wishlist" href="#">add to wishlist</a>
@@ -751,7 +804,7 @@
                                     <div class="body">
                                         <div class="label-discount clear"></div>
                                         <div class="title">
-                                            <a href="single-product.html">POV Action Cam</a>
+                                            <a href="single-product.blade.php">POV Action Cam</a>
                                         </div>
                                         <div class="brand">sony</div>
                                     </div>
@@ -761,7 +814,7 @@
                                     </div>
                                     <div class="hover-area">
                                         <div class="add-cart-button">
-                                            <a href="single-product.html" class="le-button">add to cart</a>
+                                            <a href="single-product.blade.php" class="le-button">add to cart</a>
                                         </div>
                                         <div class="wish-compare">
                                             <a class="btn-add-to-wishlist" href="#">add to wishlist</a>
@@ -781,7 +834,7 @@
                                     <div class="body">
                                         <div class="label-discount clear"></div>
                                         <div class="title">
-                                            <a href="single-product.html">White lumia 9001</a>
+                                            <a href="single-product.blade.php">White lumia 9001</a>
                                         </div>
                                         <div class="brand">nokia</div>
                                     </div>
@@ -791,7 +844,7 @@
                                     </div>
                                     <div class="hover-area">
                                         <div class="add-cart-button">
-                                            <a href="single-product.html" class="le-button">add to cart</a>
+                                            <a href="single-product.blade.php" class="le-button">add to cart</a>
                                         </div>
                                         <div class="wish-compare">
                                             <a class="btn-add-to-wishlist" href="#">add to wishlist</a>
@@ -811,7 +864,7 @@
                                     <div class="body">
                                         <div class="label-discount green">-50% sale</div>
                                         <div class="title">
-                                            <a href="single-product.html">VAIO Fit Laptop - Windows 8 SVF14322CXW</a>
+                                            <a href="single-product.blade.php">VAIO Fit Laptop - Windows 8 SVF14322CXW</a>
                                         </div>
                                         <div class="brand">sony</div>
                                     </div>
@@ -822,7 +875,7 @@
 
                                     <div class="hover-area">
                                         <div class="add-cart-button">
-                                            <a href="single-product.html" class="le-button">add to cart</a>
+                                            <a href="single-product.blade.php" class="le-button">add to cart</a>
                                         </div>
                                         <div class="wish-compare">
                                             <a class="btn-add-to-wishlist" href="#">add to wishlist</a>
@@ -861,7 +914,7 @@
                                 <div class="body">
                                     <div class="label-discount clear"></div>
                                     <div class="title">
-                                        <a href="single-product.html">beats studio headphones official one</a>
+                                        <a href="single-product.blade.php">beats studio headphones official one</a>
                                     </div>
                                     <div class="brand">beats</div>
                                 </div>
@@ -871,7 +924,7 @@
                                 </div>
                                 <div class="hover-area">
                                     <div class="add-cart-button">
-                                        <a href="single-product.html" class="le-button">Add to cart</a>
+                                        <a href="single-product.blade.php" class="le-button">Add to cart</a>
                                     </div>
                                     <div class="wish-compare">
                                         <a class="btn-add-to-wishlist" href="#">Add to Wishlist</a>
@@ -890,7 +943,7 @@
                                 <div class="body">
                                     <div class="label-discount clear"></div>
                                     <div class="title">
-                                        <a href="single-product.html">playstasion 4 with four games and pad</a>
+                                        <a href="single-product.blade.php">playstasion 4 with four games and pad</a>
                                     </div>
                                     <div class="brand">acer</div>
                                 </div>
@@ -899,7 +952,7 @@
                                 </div>
                                 <div class="hover-area">
                                     <div class="add-cart-button">
-                                        <a href="single-product.html" class="le-button">Add to cart</a>
+                                        <a href="single-product.blade.php" class="le-button">Add to cart</a>
                                     </div>
                                     <div class="wish-compare">
                                         <a class="btn-add-to-wishlist" href="#">Add to Wishlist</a>
@@ -918,7 +971,7 @@
                                 <div class="body">
                                     <div class="label-discount clear"></div>
                                     <div class="title">
-                                        <a href="single-product.html">EOS rebel t5i DSLR Camera with 18-55mm IS STM
+                                        <a href="single-product.blade.php">EOS rebel t5i DSLR Camera with 18-55mm IS STM
                                             lens</a>
                                     </div>
                                     <div class="brand">canon</div>
@@ -928,7 +981,7 @@
                                 </div>
                                 <div class="hover-area">
                                     <div class="add-cart-button">
-                                        <a href="single-product.html" class="le-button">Add to cart</a>
+                                        <a href="single-product.blade.php" class="le-button">Add to cart</a>
                                     </div>
                                     <div class="wish-compare">
                                         <a class="btn-add-to-wishlist" href="#">Add to Wishlist</a>
@@ -950,7 +1003,7 @@
                                 <div class="body">
                                     <div class="label-discount clear"></div>
                                     <div class="title">
-                                        <a href="single-product.html">fitbit zip wireless activity tracker - lime</a>
+                                        <a href="single-product.blade.php">fitbit zip wireless activity tracker - lime</a>
                                     </div>
                                     <div class="brand">fitbit zip</div>
                                 </div>
@@ -959,7 +1012,7 @@
                                 </div>
                                 <div class="hover-area">
                                     <div class="add-cart-button">
-                                        <a href="single-product.html" class="le-button">Add to cart</a>
+                                        <a href="single-product.blade.php" class="le-button">Add to cart</a>
                                     </div>
                                     <div class="wish-compare">
                                         <a class="btn-add-to-wishlist" href="#">Add to Wishlist</a>
@@ -978,7 +1031,7 @@
                                 <div class="body">
                                     <div class="label-discount clear"></div>
                                     <div class="title">
-                                        <a href="single-product.html">PowerShot elph 115 16MP digital camera</a>
+                                        <a href="single-product.blade.php">PowerShot elph 115 16MP digital camera</a>
                                     </div>
                                     <div class="brand">canon</div>
                                 </div>
@@ -987,7 +1040,7 @@
                                 </div>
                                 <div class="hover-area">
                                     <div class="add-cart-button">
-                                        <a href="single-product.html" class="le-button">Add to cart</a>
+                                        <a href="single-product.blade.php" class="le-button">Add to cart</a>
                                     </div>
                                     <div class="wish-compare">
                                         <a class="btn-add-to-wishlist" href="#">Add to Wishlist</a>
@@ -1006,7 +1059,7 @@
                                 <div class="body">
                                     <div class="label-discount clear"></div>
                                     <div class="title">
-                                        <a href="single-product.html">netbook acer travelMate b113-E-10072</a>
+                                        <a href="single-product.blade.php">netbook acer travelMate b113-E-10072</a>
                                     </div>
                                     <div class="brand">acer</div>
                                 </div>
@@ -1015,7 +1068,7 @@
                                 </div>
                                 <div class="hover-area">
                                     <div class="add-cart-button">
-                                        <a href="single-product.html" class="le-button">Add to cart</a>
+                                        <a href="single-product.blade.php" class="le-button">Add to cart</a>
                                     </div>
                                     <div class="wish-compare">
                                         <a class="btn-add-to-wishlist" href="#">Add to Wishlist</a>
@@ -1076,7 +1129,7 @@
                         <div class="body">
                             <div class="label-discount clear"></div>
                             <div class="title">
-                                <a href="single-product.html">CPU intel core i5-4670k 3.4GHz BOX B82-12-122-41</a>
+                                <a href="single-product.blade.php">CPU intel core i5-4670k 3.4GHz BOX B82-12-122-41</a>
                             </div>
                             <div class="brand">sony</div>
                         </div>
@@ -1116,7 +1169,7 @@
                             </div>
                             <div class="body">
                                 <div class="title">
-                                    <a href="single-product.html">LC-70UD1U 70" class aquos 4K ultra HD</a>
+                                    <a href="single-product.blade.php">LC-70UD1U 70" class aquos 4K ultra HD</a>
                                 </div>
                                 <div class="brand">Sharp</div>
                             </div>
@@ -1125,7 +1178,7 @@
                             </div>
                             <div class="hover-area">
                                 <div class="add-cart-button">
-                                    <a href="single-product.html" class="le-button">Add to Cart</a>
+                                    <a href="single-product.blade.php" class="le-button">Add to Cart</a>
                                 </div>
                                 <div class="wish-compare">
                                     <a class="btn-add-to-wishlist" href="#">Add to Wishlist</a>
@@ -1144,7 +1197,7 @@
                             </div>
                             <div class="body">
                                 <div class="title">
-                                    <a href="single-product.html">cinemizer OLED 3D virtual reality TV Video</a>
+                                    <a href="single-product.blade.php">cinemizer OLED 3D virtual reality TV Video</a>
                                 </div>
                                 <div class="brand">zeiss</div>
                             </div>
@@ -1153,7 +1206,7 @@
                             </div>
                             <div class="hover-area">
                                 <div class="add-cart-button">
-                                    <a href="single-product.html" class="le-button">Add to cart</a>
+                                    <a href="single-product.blade.php" class="le-button">Add to cart</a>
                                 </div>
                                 <div class="wish-compare">
                                     <a class="btn-add-to-wishlist" href="#">Add to Wishlist</a>
@@ -1172,7 +1225,7 @@
                             </div>
                             <div class="body">
                                 <div class="title">
-                                    <a href="single-product.html">s2340T23" full HD multi-Touch Monitor</a>
+                                    <a href="single-product.blade.php">s2340T23" full HD multi-Touch Monitor</a>
                                 </div>
                                 <div class="brand">dell</div>
                             </div>
@@ -1181,7 +1234,7 @@
                             </div>
                             <div class="hover-area">
                                 <div class="add-cart-button">
-                                    <a href="single-product.html" class="le-button">Add to cart</a>
+                                    <a href="single-product.blade.php" class="le-button">Add to cart</a>
                                 </div>
                                 <div class="wish-compare">
                                     <a class="btn-add-to-wishlist" href="#">Add to Wishlist</a>
@@ -1200,7 +1253,7 @@
                             </div>
                             <div class="body">
                                 <div class="title">
-                                    <a href="single-product.html">kardon BDS 7772/120 integrated 3D</a>
+                                    <a href="single-product.blade.php">kardon BDS 7772/120 integrated 3D</a>
                                 </div>
                                 <div class="brand">harman</div>
                             </div>
@@ -1209,7 +1262,7 @@
                             </div>
                             <div class="hover-area">
                                 <div class="add-cart-button">
-                                    <a href="single-product.html" class="le-button">Add to cart</a>
+                                    <a href="single-product.blade.php" class="le-button">Add to cart</a>
                                 </div>
                                 <div class="wish-compare">
                                     <a class="btn-add-to-wishlist" href="#">Add to Wishlist</a>
@@ -1228,7 +1281,7 @@
                             </div>
                             <div class="body">
                                 <div class="title">
-                                    <a href="single-product.html">netbook acer travel B113-E-10072</a>
+                                    <a href="single-product.blade.php">netbook acer travel B113-E-10072</a>
                                 </div>
                                 <div class="brand">acer</div>
                             </div>
@@ -1237,7 +1290,7 @@
                             </div>
                             <div class="hover-area">
                                 <div class="add-cart-button">
-                                    <a href="single-product.html" class="le-button">Add to cart</a>
+                                    <a href="single-product.blade.php" class="le-button">Add to cart</a>
                                 </div>
                                 <div class="wish-compare">
                                     <a class="btn-add-to-wishlist" href="#">Add to Wishlist</a>
@@ -1256,7 +1309,7 @@
                             </div>
                             <div class="body">
                                 <div class="title">
-                                    <a href="single-product.html">iPod touch 5th generation,64GB, blue</a>
+                                    <a href="single-product.blade.php">iPod touch 5th generation,64GB, blue</a>
                                 </div>
                                 <div class="brand">apple</div>
                             </div>
@@ -1265,7 +1318,7 @@
                             </div>
                             <div class="hover-area">
                                 <div class="add-cart-button">
-                                    <a href="single-product.html" class="le-button">Add to cart</a>
+                                    <a href="single-product.blade.php" class="le-button">Add to cart</a>
                                 </div>
                                 <div class="wish-compare">
                                     <a class="btn-add-to-wishlist" href="#">Add to Wishlist</a>
@@ -1284,7 +1337,7 @@
                             </div>
                             <div class="body">
                                 <div class="title">
-                                    <a href="single-product.html">s2340T23" full HD multi-Touch Monitor</a>
+                                    <a href="single-product.blade.php">s2340T23" full HD multi-Touch Monitor</a>
                                 </div>
                                 <div class="brand">dell</div>
                             </div>
@@ -1293,7 +1346,7 @@
                             </div>
                             <div class="hover-area">
                                 <div class="add-cart-button">
-                                    <a href="single-product.html" class="le-button">Add to cart</a>
+                                    <a href="single-product.blade.php" class="le-button">Add to cart</a>
                                 </div>
                                 <div class="wish-compare">
                                     <a class="btn-add-to-wishlist" href="#">Add to Wishlist</a>
@@ -1312,7 +1365,7 @@
                             </div>
                             <div class="body">
                                 <div class="title">
-                                    <a href="single-product.html">kardon BDS 7772/120 integrated 3D</a>
+                                    <a href="single-product.blade.php">kardon BDS 7772/120 integrated 3D</a>
                                 </div>
                                 <div class="brand">harman</div>
                             </div>
@@ -1321,7 +1374,7 @@
                             </div>
                             <div class="hover-area">
                                 <div class="add-cart-button">
-                                    <a href="single-product.html" class="le-button">Add to cart</a>
+                                    <a href="single-product.blade.php" class="le-button">Add to cart</a>
                                 </div>
                                 <div class="wish-compare">
                                     <a class="btn-add-to-wishlist" href="#">Add to Wishlist</a>

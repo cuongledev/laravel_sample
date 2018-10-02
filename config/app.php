@@ -180,6 +180,8 @@ return [
         Barryvdh\Debugbar\ServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
 
+        //Laravel\Dusk\DuskServiceProvider::class,
+
         //thu vien
 
         App\CUONGLELIB\Providers\ToolServiceProvider::class,
