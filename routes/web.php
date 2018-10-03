@@ -49,7 +49,7 @@ Route::group(['as' => 'frontend.','namespace' => 'Frontend'],function(){
     Route::get('/', 'HomeController@index')->name('home.index');
     Route::get('/products/{slug}-{id}.html', 'HomeController@show')->name('home.show')
     ->where([
-        'slug' => '[a-z-]+',
+        'slug' => '[a-zA-Z0-9-]+',
         'id' => '[0-9]+'
     ]);
 

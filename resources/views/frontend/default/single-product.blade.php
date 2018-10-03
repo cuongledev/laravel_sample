@@ -188,26 +188,18 @@
 
                     <div class="tab-pane" id="additional-info">
                         <ul class="tabled-data">
-                            <li>
-                                <label>weight</label>
-                                <div class="value">7.25 kg</div>
-                            </li>
-                            <li>
-                                <label>dimensions</label>
-                                <div class="value">90x60x90 cm</div>
-                            </li>
-                            <li>
-                                <label>size</label>
-                                <div class="value">one size fits all</div>
-                            </li>
-                            <li>
-                                <label>color</label>
-                                <div class="value">white</div>
-                            </li>
-                            <li>
-                                <label>guarantee</label>
-                                <div class="value">5 years</div>
-                            </li>
+                            @php
+                                $product->attributes = json_decode($product->attributes);
+                            @endphp
+                            @forelse($product->attributes as $attribute)
+                                <li>
+                                    <label>{{ $attribute->name }}</label>
+                                    <div class="value">{{ $attribute->value }}</div>
+                                </li>
+                                @empty
+                                @endforelse
+
+
                         </ul><!-- /.tabled-data -->
 
                         <div class="meta-row">

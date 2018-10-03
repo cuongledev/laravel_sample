@@ -131,15 +131,19 @@
         Vue.component('cn-attributes',{
             template: '#cn-attributes-template',
             data: function(){
-                var attributes = [
-                    { name: '',value: ''}
-                ];
+                var attributes = null;
                 @if($product->attributes)
                     attributes =  {!! $product->attributes !!};
                 @endif
-                    return {
-                    attributes: attributes
+
+                if(attributes.length ==0){
+                    attributes = [
+                        { name: '',value: ''}
+                    ];
                 }
+                    return {
+                        attributes: attributes
+                    }
             },
             methods: {
                 addAttributes: function(){
