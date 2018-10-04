@@ -205,25 +205,24 @@
                         <div class="meta-row">
                             <div class="inline">
                                 <label>SKU:</label>
-                                <span>54687621</span>
+                                <span>{{ $product->code }}</span>
                             </div><!-- /.inline -->
 
                             <span class="seperator">/</span>
 
                             <div class="inline">
                                 <label>categories:</label>
-                                <span><a href="#">-50% sale</a>,</span>
-                                <span><a href="#">gaming</a>,</span>
-                                <span><a href="#">desktop PC</a></span>
+                                <span><a href="#">{{ $product->category->name }}</a>,</span>
                             </div><!-- /.inline -->
 
                             <span class="seperator">/</span>
 
                             <div class="inline">
                                 <label>tag:</label>
-                                <span><a href="#">fast</a>,</span>
-                                <span><a href="#">gaming</a>,</span>
-                                <span><a href="#">strong</a></span>
+                                @forelse($product->tags as $tag)
+                                    <span><a href="#">{{ $tag->name }}</a>,</span>
+                                @empty
+                                @endforelse
                             </div><!-- /.inline -->
                         </div><!-- /.meta-row -->
                     </div><!-- /.tab-pane #additional-info -->
