@@ -171,28 +171,7 @@ class ProductController extends Controller
 
     }
 
-    public function saveImage($image)
-    {
-        if (file_exists(public_path('uploads'))) {
-            $folderName = date('Y-m');
-            $fileNameWithTimestamp = md5($image->getClientOriginalName() . time());
-            $fileName = $fileNameWithTimestamp . "." . $image->getClientOriginalExtension();
-            $thumbnailFileName = $fileNameWithTimestamp . "_thumb." . $image->getClientOriginalExtension();
-            if (!file_exists(public_path('uploads/' . $folderName))) {
-                mkdir(public_path('uploads/' . $folderName), 0755);
-            }
 
-// Di chuyen file vao uploads
-            $imageName = $folderName . "/" . $fileName;
-            $image->move(public_path('uploads/' . $folderName), $fileName);
-
-            Image::make(public_path('uploads/' . $folderName . "/" . $fileName))
-                ->resize(200, 150)
-                ->save(public_path('uploads/' . $folderName . "/" . $thumbnailFileName));
-            return $imageName;
-
-        }
-    }
 
     public function delete($id)
     {
@@ -226,7 +205,8 @@ class ProductController extends Controller
             'original_price' => 'required|numeric|min:0',
             'quantity' => 'required|numeric|min:0',
             'category_id' => 'required|exists:categories,id',
-            'image' => 'image|max:2048'
+            'image' => 'image|max:2048',
+            'images.*' => 'image|max:2048'
         ], [
             'name.required' => 'Vui lòng nhập tên sản phẩm.',
             'code.required' => 'Vui lòng nhập mã sản phẩm.',
@@ -236,6 +216,8 @@ class ProductController extends Controller
             'user_id.exists' => 'Không tồn tại danh mục.',
             'image.image' => 'Không đúng chuẩn định dạng image.',
             'image.size' => 'Dung lượng vượt quá giới hạn cho phép :max KB.',
+            'images.*.image' => 'Không đúng chuẩn định dạng image.',
+            'images.*.size' => 'Dung lượng vượt quá giới hạn cho phép :max KB.',
             // required
             'regular_price.required' => 'Vui lòng nhập giá thị trường sản phẩm.',
             'sale_price.required' => 'Vui lòng nhập giá bán sản phẩm.',
@@ -260,7 +242,11 @@ class ProductController extends Controller
             if ($product !== null) {
                 $imageName = $product->image;
                 if ($request->hasFile('image')) {
-                    $image = $request->file('image');
+
+                    $this->deleteImage($product->image);
+                    $this->saveImage($request->file('image'));
+
+                    /*$image = $request->file('image');
                     if (file_exists(public_path('uploads'))) {
                         $folderName = date('Y-m');
                         $fileNameWithTimestamp = md5($image->getClientOriginalName() . time());
@@ -269,23 +255,44 @@ class ProductController extends Controller
                         if (!file_exists(public_path('uploads/' . $folderName))) {
                             mkdir(public_path('uploads/' . $folderName), 0755);
                         }
+
+                        // Di chuyen file vao uploads
+                        $imageName = $folderName . "/" . $fileName;
+                        $image->move(public_path('uploads/' . $folderName), $fileName);
+
+                        Image::make(public_path('uploads/' . $folderName . "/" . $fileName))
+                            ->resize(200, 150)
+                            ->save(public_path('uploads/' . $folderName . "/" . $thumbnailFileName));
+
+
+                        $this->deleteImage($product->image);
+
+
+
+                    }*/
+
+                }
+
+                // cập nhập vào thư viện hình ảnh
+                if ($request->hasFile('images')) {
+
+                    foreach ($product->attachments as $file){
+                        $this->deleteImage($file->image);
+                        $file->delete();
                     }
-
-                    // Di chuyen file vao uploads
-                    $imageName = $folderName . "/" . $fileName;
-                    $image->move(public_path('uploads/' . $folderName), $fileName);
-
-                    Image::make(public_path('uploads/' . $folderName . "/" . $fileName))
-                        ->resize(200, 150)
-                        ->save(public_path('uploads/' . $folderName . "/" . $thumbnailFileName));
-
-                    if (!is_dir(public_path('uploads/' . $product->image)) && file_exists(public_path('uploads/' . $product->image))) {
-                        unlink(public_path('uploads/' . $product->image));
+                    foreach ($request->file('images') as $file) {
+                        Attachment::create([
+                            'type' => 'image',
+                            'mime' => $file->getMimeType(),
+                            'path' => $this->saveImage($file),
+                            'product_id' => $product->id
+                        ]);
                     }
 
                 }
 
 
+                // thêm attributes
                 $attributes = '';
                 if ($request->has('attributes') && is_array($request->input('attributes')) && count($request->input('attributes')) > 0) {
                     $attributes = $request->input('attributes');
@@ -344,5 +351,50 @@ class ProductController extends Controller
 
         }
 
+    }
+
+    public function saveImage($image)
+    {
+        if (file_exists(public_path('uploads'))) {
+            $folderName = date('Y-m');
+            $fileNameWithTimestamp = md5($image->getClientOriginalName() . time());
+            $fileName = $fileNameWithTimestamp . "." . $image->getClientOriginalExtension();
+
+            if (!file_exists(public_path('uploads/' . $folderName))) {
+                mkdir(public_path('uploads/' . $folderName), 0755);
+            }
+
+// Di chuyen file vao uploads
+            $imageName = $folderName . "/" . $fileName;
+            $image->move(public_path('uploads/' . $folderName), $fileName);
+
+            // tạo các hình ảnh theo tỉ lệ
+            $createImage = function($suffix = '_thumb',$width = 250,$height = 170) use ($folderName,$fileName,$fileNameWithTimestamp,$image) {
+                $thumbnailFileName = $fileNameWithTimestamp . $suffix . "." . $image->getClientOriginalExtension();
+                Image::make(public_path('uploads/' . $folderName . "/" . $fileName))
+                    ->resize($width, $height)
+                    ->save(public_path('uploads/' . $folderName . "/" . $thumbnailFileName))
+                    ->destroy();
+
+            };
+            $createImage();
+            $createImage('_900x530',900,530);
+            $createImage('_900x300',900,300);
+            $createImage('_600x170',600,170);
+            $createImage('_80x80',80,80);
+
+
+            return $imageName;
+
+        }
+    }
+
+    public function deleteImage($path){
+        if (!is_dir(public_path('uploads/' . $path)) && file_exists(public_path('uploads/' . $path))) {
+            unlink(public_path('uploads/' . $path));
+            if(!is_dir(public_path('uploads/' . getThumbnail($path))) && file_exists(public_path('uploads/' . getThumbnail($path)))){
+                unlink(public_path('uploads/' . getThumbnail($path)));
+            }
+        }
     }
 }

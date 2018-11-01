@@ -89,9 +89,9 @@
 
                             </div>
 
-                            <input type="file" class="form-control" id="image" name="image"
-                                   value="{{ $product->image }}">
-                            <div class="invalid-feedback">{{ $errors->first('image') }}</div>
+                            <input type="file" class="form-control" id="images" name="images[]"
+                                   value="{{ old('images') }}" multiple>
+                            <div class="invalid-feedback">{{ $errors->first('images.*') }}</div>
                         </div>
                         <div class="form-group {{ $errors->has('category_id') ? 'has-error' : '' }}">
                             <label for="username">Chuyên mục cha:</label>
