@@ -35,4 +35,7 @@ class Product extends Model
             ->withPivot('quantity')
             ->withTimestamps();
     }
+    public function attachments(){
+        return $this->hasMany('App\Attachment','product_id','id');
+    }
 }

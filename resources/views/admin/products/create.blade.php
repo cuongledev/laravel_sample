@@ -47,22 +47,20 @@
                                    value="{{ old('quantity') }}">
                             <div class="invalid-feedback">{{ $errors->first('quantity') }}</div>
                         </div>
+
                         <div class="form-group {{ $errors->has('image') ? 'has-error' : '' }}">
                             <label for="name">Hình sản phẩm:</label>
                             <input type="file" class="form-control" id="image" name="image"
                                    value="{{ old('image') }}">
                             <div class="invalid-feedback">{{ $errors->first('image') }}</div>
                         </div>
-
-                        <!--Upload thư viện hình ảnh-->
-                        {{ $error->all() }}
-                        <div class="form-group {{ $errors->has('images.*') ? 'has-error' : '' }}">
-                            <label for="images">Hình sản phẩm:</label>
+                        <!-- UPLOAD -->
+                        <div class="form-group {{ $errors->has('image.*') ? 'has-error' : '' }}">
+                            <label for="images">Thư viện hình sản phẩm:</label>
                             <input type="file" class="form-control" id="images" name="images[]"
-                                   value="{{ old('images') }}" multiple />
+                                   value="{{ old('images') }}" multiple>
                             <div class="invalid-feedback">{{ $errors->first('images.*') }}</div>
                         </div>
-
 
                         <div class="form-group {{ $errors->has('category_id') ? 'has-error' : '' }}">
                             <label for="username">Chuyên mục cha:</label>

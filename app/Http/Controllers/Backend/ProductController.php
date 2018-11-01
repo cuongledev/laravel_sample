@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Backend;
 
+use App\Attachment;
 use App\CUONGLELIB\Facades\Tool;
 use App\Http\Controllers\Controller;
 use App\Category;
@@ -50,7 +51,7 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {
-        //dd($request->all());
+
         $valid = Validator::make($request->all(), [
             'name' => 'required',
             'code' => 'required|unique:products,code',
@@ -70,11 +71,9 @@ class ProductController extends Controller
             'category_id.exists' => 'Không tồn tại danh mục.',
             'user_id.exists' => 'Không tồn tại danh mục.',
             'image.image' => 'Không đúng chuẩn định dạng image.',
-            // size
-            'image.max' => 'Dung lượng vượt quá giới hạn cho phép :max KB.',
+            'image.size' => 'Dung lượng vượt quá giới hạn cho phép :max KB.',
             'images.*.image' => 'Không đúng chuẩn định dạng image.',
-            // size
-            'images.*.max' => 'Dung lượng vượt quá giới hạn cho phép :max KB.',
+            'images.*.size' => 'Dung lượng vượt quá giới hạn cho phép :max KB.',
             // required
             'regular_price.required' => 'Vui lòng nhập giá thị trường sản phẩm.',
             'sale_price.required' => 'Vui lòng nhập giá bán sản phẩm.',
@@ -95,17 +94,15 @@ class ProductController extends Controller
         if ($valid->fails()) {
             return redirect()->back()->withErrors($valid)->withInput();
         } else {
-            $imageName = '';
+            $imageName = null;
             if ($request->hasFile('image')) {
                 $imageName = $this->saveImage($request->file('image'));
+
             }
 
-            // thêm vào thu viện hình ảnh
-
-            
 
 
-            $attributes = '';
+            $attributes = null;
             if ($request->has('attributes') && is_array($request->input('attributes')) && count($request->input('attributes')) > 0) {
                 $attributes = $request->input('attributes');
                 foreach ($attributes as $key => $item) {
@@ -135,6 +132,20 @@ class ProductController extends Controller
                 'user_id' => auth()->id()
             ]);
 
+            // thêm vào thư viện hình ảnh
+            if ($request->hasFile('images')) {
+
+                foreach ($request->file('images') as $file) {
+                    Attachment::create([
+                        'type' => 'image',
+                        'mime' => $file->getMimeType(),
+                        'path' => $this->saveImage($file),
+                        'product_id' => $product->id
+                    ]);
+                }
+
+            }
+
             // them tags
 
             if ($request->has('tags') && is_array($request->input('tags')) && count($request->input('tags')) > 0) {
@@ -159,7 +170,9 @@ class ProductController extends Controller
         }
 
     }
-    public function saveImage($image){
+
+    public function saveImage($image)
+    {
         if (file_exists(public_path('uploads'))) {
             $folderName = date('Y-m');
             $fileNameWithTimestamp = md5($image->getClientOriginalName() . time());
@@ -168,14 +181,16 @@ class ProductController extends Controller
             if (!file_exists(public_path('uploads/' . $folderName))) {
                 mkdir(public_path('uploads/' . $folderName), 0755);
             }
-            // Di chuyen file vao uploads
+
+// Di chuyen file vao uploads
             $imageName = $folderName . "/" . $fileName;
             $image->move(public_path('uploads/' . $folderName), $fileName);
 
-            Image::make(public_path('uploads/'.$folderName."/".$fileName))
-                ->resize(200,150)
-                ->save(public_path('uploads/'.$folderName."/".$thumbnailFileName));
+            Image::make(public_path('uploads/' . $folderName . "/" . $fileName))
+                ->resize(200, 150)
+                ->save(public_path('uploads/' . $folderName . "/" . $thumbnailFileName));
             return $imageName;
+
         }
     }
 
@@ -260,12 +275,12 @@ class ProductController extends Controller
                     $imageName = $folderName . "/" . $fileName;
                     $image->move(public_path('uploads/' . $folderName), $fileName);
 
-                    Image::make(public_path('uploads/'.$folderName."/".$fileName))
-                        ->resize(200,150)
-                    ->save(public_path('uploads/'.$folderName."/".$thumbnailFileName));
+                    Image::make(public_path('uploads/' . $folderName . "/" . $fileName))
+                        ->resize(200, 150)
+                        ->save(public_path('uploads/' . $folderName . "/" . $thumbnailFileName));
 
-                    if( !is_dir(public_path('uploads/'.$product->image)) && file_exists(public_path('uploads/'.$product->image))){
-                        unlink(public_path('uploads/'.$product->image));
+                    if (!is_dir(public_path('uploads/' . $product->image)) && file_exists(public_path('uploads/' . $product->image))) {
+                        unlink(public_path('uploads/' . $product->image));
                     }
 
                 }

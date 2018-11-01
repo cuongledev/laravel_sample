@@ -179,12 +179,12 @@ return [
 
         Barryvdh\Debugbar\ServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
-
+        App\CUONGLELIB\Providers\ToolServiceProvider::class,
         //Laravel\Dusk\DuskServiceProvider::class,
 
         //thu vien
 
-        App\CUONGLELIB\Providers\ToolServiceProvider::class,
+
 
     ],
 
