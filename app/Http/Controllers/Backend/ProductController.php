@@ -50,6 +50,7 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {
+        //dd($request->all());
         $valid = Validator::make($request->all(), [
             'name' => 'required',
             'code' => 'required|unique:products,code',
@@ -59,7 +60,8 @@ class ProductController extends Controller
             'original_price' => 'required|numeric|min:0',
             'quantity' => 'required|numeric|min:0',
             'category_id' => 'required|exists:categories,id',
-            'image' => 'image|max:2048'
+            'image' => 'image|max:2048',
+            'images.*' => 'image|max:2048'
         ], [
             'name.required' => 'Vui lòng nhập tên sản phẩm.',
             'code.required' => 'Vui lòng nhập mã sản phẩm.',
@@ -68,7 +70,11 @@ class ProductController extends Controller
             'category_id.exists' => 'Không tồn tại danh mục.',
             'user_id.exists' => 'Không tồn tại danh mục.',
             'image.image' => 'Không đúng chuẩn định dạng image.',
-            'image.size' => 'Dung lượng vượt quá giới hạn cho phép :max KB.',
+            // size
+            'image.max' => 'Dung lượng vượt quá giới hạn cho phép :max KB.',
+            'images.*.image' => 'Không đúng chuẩn định dạng image.',
+            // size
+            'images.*.max' => 'Dung lượng vượt quá giới hạn cho phép :max KB.',
             // required
             'regular_price.required' => 'Vui lòng nhập giá thị trường sản phẩm.',
             'sale_price.required' => 'Vui lòng nhập giá bán sản phẩm.',
@@ -91,26 +97,12 @@ class ProductController extends Controller
         } else {
             $imageName = '';
             if ($request->hasFile('image')) {
-                $image = $request->file('image');
-                if (file_exists(public_path('uploads'))) {
-                    $folderName = date('Y-m');
-                    $fileNameWithTimestamp = md5($image->getClientOriginalName() . time());
-                    $fileName = $fileNameWithTimestamp . "." . $image->getClientOriginalExtension();
-                    $thumbnailFileName = $fileNameWithTimestamp . "_thumb." . $image->getClientOriginalExtension();
-                    if (!file_exists(public_path('uploads/' . $folderName))) {
-                        mkdir(public_path('uploads/' . $folderName), 0755);
-                    }
-                }
-
-                // Di chuyen file vao uploads
-                $imageName = $folderName . "/" . $fileName;
-                $image->move(public_path('uploads/' . $folderName), $fileName);
-
-                Image::make(public_path('uploads/'.$folderName."/".$fileName))
-                    ->resize(200,150)
-                ->save(public_path('uploads/'.$folderName."/".$thumbnailFileName));
-
+                $imageName = $this->saveImage($request->file('image'));
             }
+
+            // thêm vào thu viện hình ảnh
+
+            
 
 
             $attributes = '';
@@ -166,6 +158,25 @@ class ProductController extends Controller
             return redirect()->route('admin.product.index')->with('messager', "Thêm sản phẩm $product->name thành công.");
         }
 
+    }
+    public function saveImage($image){
+        if (file_exists(public_path('uploads'))) {
+            $folderName = date('Y-m');
+            $fileNameWithTimestamp = md5($image->getClientOriginalName() . time());
+            $fileName = $fileNameWithTimestamp . "." . $image->getClientOriginalExtension();
+            $thumbnailFileName = $fileNameWithTimestamp . "_thumb." . $image->getClientOriginalExtension();
+            if (!file_exists(public_path('uploads/' . $folderName))) {
+                mkdir(public_path('uploads/' . $folderName), 0755);
+            }
+            // Di chuyen file vao uploads
+            $imageName = $folderName . "/" . $fileName;
+            $image->move(public_path('uploads/' . $folderName), $fileName);
+
+            Image::make(public_path('uploads/'.$folderName."/".$fileName))
+                ->resize(200,150)
+                ->save(public_path('uploads/'.$folderName."/".$thumbnailFileName));
+            return $imageName;
+        }
     }
 
     public function delete($id)
