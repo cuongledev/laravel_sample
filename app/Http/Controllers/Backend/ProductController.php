@@ -177,6 +177,13 @@ class ProductController extends Controller
     {
         $product = Product::find($id);
         if ($product !== null) {
+            $this->deleteImage($product->image);
+            if(count($product->attachments)>0){
+                foreach ($product->attachments as $file){
+                    $this->deleteImage($file->path);
+                    $file->delete();
+                }
+            }
             $product->delete();
             return redirect()->route('admin.product.index')->with('messager', "Xóa sản phẩm $product->name thành công.");
         }
@@ -244,7 +251,7 @@ class ProductController extends Controller
                 if ($request->hasFile('image')) {
 
                     $this->deleteImage($product->image);
-                    $this->saveImage($request->file('image'));
+                    $imageName = $this->saveImage($request->file('image'));
 
                     /*$image = $request->file('image');
                     if (file_exists(public_path('uploads'))) {
@@ -277,7 +284,7 @@ class ProductController extends Controller
                 if ($request->hasFile('images')) {
 
                     foreach ($product->attachments as $file){
-                        $this->deleteImage($file->image);
+                        $this->deleteImage($file->path);
                         $file->delete();
                     }
                     foreach ($request->file('images') as $file) {
@@ -355,7 +362,7 @@ class ProductController extends Controller
 
     public function saveImage($image)
     {
-        if (file_exists(public_path('uploads'))) {
+        if (!empty($image) && file_exists(public_path('uploads'))) {
             $folderName = date('Y-m');
             $fileNameWithTimestamp = md5($image->getClientOriginalName() . time());
             $fileName = $fileNameWithTimestamp . "." . $image->getClientOriginalExtension();
@@ -392,9 +399,16 @@ class ProductController extends Controller
     public function deleteImage($path){
         if (!is_dir(public_path('uploads/' . $path)) && file_exists(public_path('uploads/' . $path))) {
             unlink(public_path('uploads/' . $path));
-            if(!is_dir(public_path('uploads/' . getThumbnail($path))) && file_exists(public_path('uploads/' . getThumbnail($path)))){
-                unlink(public_path('uploads/' . getThumbnail($path)));
-            }
+            $deleteImageAll = function($sizeArr) use ($path){
+                foreach ($sizeArr as $size) {
+                    if(!is_dir(public_path('uploads/' . getThumbnail($path,$size))) && file_exists(public_path('uploads/' . getThumbnail($path,$size)))){
+                        unlink(public_path('uploads/' . getThumbnail($path,$size)));
+                    }
+                }
+
+            };
+            $deleteImageAll(['_thumb','_900x530','_900x300','_600x170','_80x80']);
+
         }
     }
 }

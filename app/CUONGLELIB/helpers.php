@@ -2,7 +2,7 @@
 
 use App\CUONGLELIB\Facades\Tool;
 if(!function_exists('getThumbnail')){
-    function getThumbnail($fileName){
-        return Tool::getThumbnail($fileName);
+    function getThumbnail($fileName,$suffix = '_thumb'){
+        return Tool::getThumbnail($fileName,$suffix);
     }
 }

@@ -178,7 +178,7 @@
                     attributes =  {!! $product->attributes !!};
                 @endif
 
-                if (attributes.length == 0) {
+                if (attributes == null || attributes.length == 0) {
                     attributes = [
                         {name: '', value: ''}
                     ];
