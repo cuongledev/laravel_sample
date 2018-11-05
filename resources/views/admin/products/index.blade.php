@@ -54,10 +54,10 @@
                                     <td>{{ $product->created_at }}</td>
                                     <td>{{ $product->updated_at }}</td>
                                     <td><a href="{{ route('admin.product.show' , ['id' => $product->id]) }}"
-                                           class="btn btn-primary">Edit</a>
+                                           class="btn btn-primary"><i class="glyphicon glyphicon-pencil"></i></a>
                                         <a href="{{ route('admin.product.show' , ['id' => $product->id]) }}"
                                            class="btn btn-danger" onclick="event.preventDefault();
-                                           window.confirm('Bạn chắc chắn xóa sản phẩm này?') ? document.getElementById('product-delete-{{ $product->id }}').submit() : 0;">Delete</a>
+                                           window.confirm('Bạn chắc chắn xóa sản phẩm này?') ? document.getElementById('product-delete-{{ $product->id }}').submit() : 0;"><i class="glyphicon glyphicon-trash"></i></a>
                                         <form action="{{ route('admin.product.delete' , ['id' => $product->id]) }}" method="post"
                                               id="product-delete-{{ $product->id }}">
 

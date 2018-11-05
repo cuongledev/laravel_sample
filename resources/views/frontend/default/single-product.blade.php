@@ -7,80 +7,42 @@
                 <div class="product-item-holder size-big single-product-gallery small-gallery">
 
                     <div id="owl-single-product">
-                        <div class="single-product-gallery-item" id="slide1">
-                            <a data-rel="prettyphoto" href="images/products/product-gallery-01.jpg">
-                                <img class="img-responsive" alt=""
-                                     src="{{ asset('themes/default/assets/images/blank.gif') }}"
-                                     data-echo="{{ asset('themes/default/assets/images/products/product-gallery-01.jpg') }}"/>
-                            </a>
-                        </div><!-- /.single-product-gallery-item -->
+                        @forelse($product->attachments as $key => $file)
+                            @if(file_exists(public_path(getThumbnail('uploads/'.$file->path,'_450x337'))))
+                                <div class="single-product-gallery-item" id="slide{{ $key + 1 }}">
+                                    <a data-rel="prettyphoto" href="{{ asset('uploads/'.getThumbnail($file->path,'_450x337')) }}">
+                                        <img class="img-responsive" alt=""
+                                             src="{{ asset('themes/default/assets/images/blank.gif') }}"
+                                             data-echo="{{ asset('uploads/'.getThumbnail($file->path,'_450x337')) }}"/>
+                                    </a>
+                                </div><!-- /.single-product-gallery-item -->
+                            @else
+                                <img src="{{ asset('images/no_image.jpg') }}" />
+                            @endif
 
-                        <div class="single-product-gallery-item" id="slide2">
-                            <a data-rel="prettyphoto" href="images/products/product-gallery-01.jpg">
-                                <img class="img-responsive" alt=""
-                                     src="{{ asset('themes/default/assets/images/blank.gif') }}"
-                                     data-echo="{{ asset('themes/default/assets/images/products/product-gallery-01.jpg') }}"/>
-                            </a>
-                        </div><!-- /.single-product-gallery-item -->
+                        @empty
 
-                        <div class="single-product-gallery-item" id="slide3">
-                            <a data-rel="prettyphoto" href="images/products/product-gallery-01.jpg">
-                                <img class="img-responsive" alt=""
-                                     src="{{ asset('themes/default/assets/images/blank.gif') }}"
-                                     data-echo="{{ asset('themes/default/assets/images/products/product-gallery-01.jpg') }}"/>
-                            </a>
-                        </div><!-- /.single-product-gallery-item -->
+                        @endforelse
                     </div><!-- /.single-product-slider -->
 
 
                     <div class="single-product-gallery-thumbs gallery-thumbs">
 
                         <div id="owl-single-product-thumbnails">
-                            <a class="horizontal-thumb active" data-target="#owl-single-product" data-slide="0"
-                               href="#slide1">
-                                <img width="67" alt="" src="{{ asset('themes/default/assets/images/blank.gif') }}"
-                                     data-echo="{{ asset('themes/default/assets/images/products/gallery-thumb-01.jpg') }}"/>
-                            </a>
+                            @forelse($product->attachments as $key => $file)
+                                @if(file_exists(public_path(getThumbnail('uploads/'.$file->path,'_80x80'))))
+                                    <a class="horizontal-thumb" data-target="#owl-single-product" data-slide="{{ $key + 1 }}" href="#slide{{ $key + 1 }}">
+                                        <img width="67" alt="" src="{{ asset('themes/default/assets/images/blank.gif') }}"
+                                             data-echo="{{ asset('uploads/'.getThumbnail($file->path,'_80x80')) }}"/>
+                                    </a>
+                                @else
+                                    <img src="{{ asset('images/no_image.jpg') }}" />
+                                @endif
 
-                            <a class="horizontal-thumb" data-target="#owl-single-product" data-slide="1" href="#slide2">
-                                <img width="67" alt="" src="{{ asset('themes/default/assets/images/blank.gif') }}"
-                                     data-echo="{{ asset('themes/default/assets/images/products/gallery-thumb-01.jpg') }}"/>
-                            </a>
+                            @empty
 
-                            <a class="horizontal-thumb" data-target="#owl-single-product" data-slide="2" href="#slide3">
-                                <img width="67" alt="" src="{{ asset('themes/default/assets/images/blank.gif') }}"
-                                     data-echo="{{ asset('themes/default/assets/images/products/gallery-thumb-01.jpg') }}"/>
-                            </a>
+                            @endforelse
 
-                            <a class="horizontal-thumb" data-target="#owl-single-product" data-slide="0" href="#slide1">
-                                <img width="67" alt="" src="{{ asset('themes/default/assets/images/blank.gif') }}"
-                                     data-echo="{{ asset('themes/default/assets/images/products/gallery-thumb-01.jpg') }}"/>
-                            </a>
-
-                            <a class="horizontal-thumb" data-target="#owl-single-product" data-slide="1" href="#slide2">
-                                <img width="67" alt="" src="{{ asset('themes/default/assets/images/blank.gif') }}"
-                                     data-echo="{{ asset('themes/default/assets/images/products/gallery-thumb-01.jpg') }}"/>
-                            </a>
-
-                            <a class="horizontal-thumb" data-target="#owl-single-product" data-slide="2" href="#slide3">
-                                <img width="67" alt="" src="{{ asset('themes/default/assets/images/blank.gif') }}"
-                                     data-echo="{{ asset('themes/default/assets/images/products/gallery-thumb-01.jpg') }}"/>
-                            </a>
-
-                            <a class="horizontal-thumb" data-target="#owl-single-product" data-slide="0" href="#slide1">
-                                <img width="67" alt="" src="{{ asset('themes/default/assets/images/blank.gif') }}"
-                                     data-echo="{{ asset('themes/default/assets/images/products/gallery-thumb-01.jpg') }}"/>
-                            </a>
-
-                            <a class="horizontal-thumb" data-target="#owl-single-product" data-slide="1" href="#slide2">
-                                <img width="67" alt="" src="{{ asset('themes/default/assets/images/blank.gif') }}"
-                                     data-echo="{{ asset('themes/default/assets/images/products/gallery-thumb-01.jpg') }}"/>
-                            </a>
-
-                            <a class="horizontal-thumb" data-target="#owl-single-product" data-slide="2" href="#slide3">
-                                <img width="67" alt="" src="{{ asset('themes/default/assets/images/blank.gif') }}"
-                                     data-echo="{{ asset('themes/default/assets/images/products/gallery-thumb-01.jpg') }}"/>
-                            </a>
                         </div><!-- /#owl-single-product-thumbnails -->
 
                         <div class="nav-holder left hidden-xs">
@@ -190,6 +152,9 @@
                         <ul class="tabled-data">
                             @php
                                 $product->attributes = json_decode($product->attributes);
+                                if(empty($product->attributes)){
+                                    $product->attributes = [];
+                                }
                             @endphp
                             @forelse($product->attributes as $attribute)
                                 <li>

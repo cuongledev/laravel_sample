@@ -387,6 +387,7 @@ class ProductController extends Controller
             $createImage();
             $createImage('_900x530',900,530);
             $createImage('_900x300',900,300);
+            $createImage('_450x337',450,337);
             $createImage('_600x170',600,170);
             $createImage('_80x80',80,80);
 
@@ -407,7 +408,7 @@ class ProductController extends Controller
                 }
 
             };
-            $deleteImageAll(['_thumb','_900x530','_900x300','_600x170','_80x80']);
+            $deleteImageAll(['_thumb','_900x530','_900x300','_600x170','_80x80','_450x337']);
 
         }
     }
