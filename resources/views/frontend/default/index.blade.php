@@ -510,7 +510,7 @@
                 <!-- Nav tabs -->
                 <ul class="nav nav-tabs">
                     <li class="active"><a href="#latest-products" data-toggle="tab">Sản Phẩm Mới</a></li>
-                    <li><a href="#featured" data-toggle="tab">featured</a></li>
+                    <li><a href="#featured" data-toggle="tab">Bán chạy</a></li>
                     <li><a href="#new-arrivals" data-toggle="tab">new arrivals</a></li>
                     <li><a href="#top-sales" data-toggle="tab">top sales</a></li>
                 </ul>
@@ -561,6 +561,7 @@
                                     </div>
                                 </div>
                             @empty
+                                <div>Không có dữ liệu</div>
                             @endforelse
                         </div>
                         <div class="loadmore-holder text-center">
@@ -572,7 +573,7 @@
                     </div>
                     <div class="tab-pane active" id="featured">
                         <div class="product-grid-holder">
-                            @forelse($products as $product)
+                            @forelse($featured_product as $product)
                                 <div class="col-sm-4 col-md-3  no-margin product-item-holder hover">
                                     <div class="product-item">
                                         {{--<div class="ribbon red"><span>sale</span></div>--}}
@@ -614,6 +615,7 @@
                                     </div>
                                 </div>
                             @empty
+                                <div>Không có dữ liệu</div>
                             @endforelse
                         </div>
                         <div class="loadmore-holder text-center">

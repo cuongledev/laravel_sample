@@ -26,6 +26,7 @@ class HomeController extends Controller
     public function index()
     {
         $data['products'] = Product::orderBy('id','DESC')->limit(12)->get();
+        $data['featured_product'] = Product::where('featured_product',1)->orderBy('id','DESC')->limit(12)->get();
         return view('frontend.default.index',$data);
     }
 

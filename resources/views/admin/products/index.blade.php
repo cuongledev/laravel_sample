@@ -53,7 +53,10 @@
                                     <td>{{ $product->user->name }}</td>
                                     <td>{{ $product->created_at }}</td>
                                     <td>{{ $product->updated_at }}</td>
-                                    <td><a href="{{ route('admin.product.show' , ['id' => $product->id]) }}"
+                                    <td><a href="{{ route('admin.product.setFeaturedProduct' , ['id' => $product->id]) }}"
+                                           class="btn btn-{{ $product->featured_product ? 'success' : 'warning' }}" onclick="event.preventDefault();
+                                                document.getElementById('product-feature-{{ $product->id }}').submit();"><i class="glyphicon glyphicon-eye-close"></i></a>
+                                        <a href="{{ route('admin.product.show' , ['id' => $product->id]) }}"
                                            class="btn btn-primary"><i class="glyphicon glyphicon-pencil"></i></a>
                                         <a href="{{ route('admin.product.show' , ['id' => $product->id]) }}"
                                            class="btn btn-danger" onclick="event.preventDefault();
@@ -63,6 +66,12 @@
 
                                             {{ csrf_field() }}
                                             {{ method_field('delete') }}
+                                        </form>
+                                        <form action="{{ route('admin.product.setFeaturedProduct' , ['id' => $product->id]) }}" method="post"
+                                              id="product-feature-{{ $product->id }}">
+
+                                            {{ csrf_field() }}
+                                            {{ method_field('patch') }}
                                         </form>
                                     </td>
                                 </tr>

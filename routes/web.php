@@ -42,6 +42,7 @@ Route::group(['prefix'=> 'admin','as' => 'admin.','namespace' => 'Backend'],func
     Route::get('/products/{id}', 'ProductController@show')->where('id', '[0-9]+')->name('product.show');
     Route::put('/products/{id}/update', 'ProductController@update')->name('product.update');
     Route::delete('/products/{id}/delete', 'ProductController@delete')->name('product.delete');
+    Route::patch('/products/{id}', 'ProductController@setFeaturedProduct')->name('product.setFeaturedProduct');
 
 });
 

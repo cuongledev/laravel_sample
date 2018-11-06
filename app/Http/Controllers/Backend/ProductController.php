@@ -32,7 +32,10 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $data['products'] = Product::with('user', 'category')->orderBy('id', 'desc')->paginate(10);
+        $data['products'] = Product::with('user', 'category')
+            ->orderBy('featured_product', 'desc')
+            ->orderBy('id', 'desc')
+            ->paginate(10);
         /*
          * $data['products'] = Product::where([
             ['name','like','%go%'],
@@ -411,5 +414,15 @@ class ProductController extends Controller
             $deleteImageAll(['_thumb','_900x530','_900x300','_600x170','_80x80','_450x337']);
 
         }
+    }
+    public function setFeaturedProduct($id){
+        $product = Product::find($id);
+        if ($product !== null) {
+            $product->featured_product = !$product->featured_product;
+            $product->save();
+            return redirect()->route('admin.product.index')->with('message', "Đặt sản phẩm ".$product->name." bán chạy thành công.");
+        }
+        return redirect()->route('admin.product.index')->with('error', "Không tìm thấy sản phẩm này.");
+
     }
 }
